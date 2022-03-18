@@ -64,7 +64,7 @@ def show_shopping_cart():
     """Display content of shopping cart."""
 
     # TODO: Display the contents of the shopping cart.
-
+    
     # The logic here will be something like:
     #
     # - get the cart dictionary from the session
@@ -80,8 +80,27 @@ def show_shopping_cart():
     #
     # Make sure your function can also handle the case wherein no cart has
     # been added to the session
+    cart = session['cart']
+    melon_list= []
+    total = 0
+    for item in cart:
+        melon_data = melons.get_by_id(item)
+        melon_quantity = cart[item]
+        melon_name = melon_data.common_name
+        melon_price = melon_data.price
+        total_melon_cost = melon_price * melon_quantity
+        melon_dict = {}
+        melon_dict['name'] = melon_name 
+        melon_dict['quantity'] = melon_quantity 
+        melon_dict['price'] = melon_price 
+        melon_dict['total_price'] = total_melon_cost
+        melon_list.append(melon_dict) 
 
-    return render_template("cart.html")
+    for melon in melon_list:
+        melon_total = melon.get("total_price")
+        total += (melon_total)
+
+    return render_template("cart.html", melon_list=melon_list, total=total)
 
 
 @app.route("/add_to_cart/<melon_id>")
